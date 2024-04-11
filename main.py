@@ -1,5 +1,6 @@
 from uuid import uuid4
 from typing import List
+from difflib import HtmlDiff
 from pydantic import UUID4, BaseModel, Field, model_serializer
 
 
@@ -61,9 +62,18 @@ customer = Customer(name = "bob", cif = 123, accounts = [account1, account2])
 # customer.accounts = [account1, account2]
 # customer.accounts.append(account2)
 
-company = Company(cif = 789, regNo = "123D", customers = [customer])
-# print(company.model_dump())
-print(company.model_dump_json(indent = 2))
+company1 = Company(cif = 789, regNo = "123D", customers = [customer])
+company2 = Company(cif = 1011, regNo = "456F", customers = [customer])
+# print(company1.model_dump())
+print(company1.model_dump_json(indent = 2))
 
 # with open("789.json", "w") as f:
-#     f.write(company.model_dump_json(indent = 2))
+#     f.write(company1.model_dump_json(indent = 2))
+
+html_diff = HtmlDiff().make_file(
+    str(company1.model_dump_json(indent = 2)).split(), 
+    str(company2.model_dump_json(indent = 2)).split()
+)
+
+with open("diff.html", "w") as f:
+    f.write(html_diff)
