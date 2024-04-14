@@ -1,1 +1,3 @@
-# sql-model
+# JSON Model
+
+Pydantic POC for JSON fields.
